@@ -11,6 +11,15 @@ a {
   text-decoration: none;
 }
 
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
 * {
+  margin: 0;
   box-sizing: border-box;
+  font-family: "Cairo", sans-serif;
+  padding: 0;
 }

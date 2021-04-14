@@ -1,65 +1,84 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Link from "next/link";
 
-export default function Home() {
+import { useContext } from "react";
+import styled from "styled-components";
+
+import QuizContext from "../context/QuizContext";
+
+const Home = () => {
+  const { points } = useContext(QuizContext);
+
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <Container>
+      <Title>Javascript - quiz</Title>
+      <Link href="/quiz">
+        <StartBtn>Zacznij quiz!</StartBtn>
+      </Link>
+    </Container>
+  );
+};
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
+const StartBtn = styled.a`
+  position: relative;
+  flex-basis: 50%;
 
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
+  box-shadow: 0 0 0 4px ${({ theme }) => theme.colors.main};
 
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
+  text-align: center;
+  font-size: 2rem;
+  font-family: "Cairo", sans-serif;
 
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
+  color: ${({ theme }) => theme.colors.main};
 
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
+  padding: 0.5rem 0;
+  transition: 300ms;
 
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
+  &::after {
+    content: "Przygotuj się! Test jest ograniczony czasowo, a po jego rozpoczęciu nie można zatrzymać czasu.";
+    position: absolute;
+    top: 0;
+    left: 15%;
+    right: 15%;
 
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
-}
+    transform: translateY(-50%);
+
+    box-shadow: 0 0 0 4px ${({ theme }) => theme.colors.main};
+
+    opacity: 0;
+    padding: 0.25rem;
+    transition: 300ms;
+  }
+
+  &:hover::after {
+    transform: translateY(-125%);
+    color: ${({ theme }) => theme.colors.main};
+    opacity: 1;
+  }
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.main};
+    color: white;
+  }
+`;
+
+const Container = styled.div`
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Title = styled.h1`
+  flex-basis: 100%;
+
+  font-size: 5rem;
+  text-align: center;
+
+  background: ${({ theme }) => theme.colors.main};
+  color: white;
+`;
+
+export default Home;
