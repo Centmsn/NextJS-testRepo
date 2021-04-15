@@ -36,7 +36,10 @@ const Quiz = () => {
         </p>
         <p>Wyniki oraz poprawne odpowiedzi poznasz po zakończeniu quizu.</p>
         <p>Wszystkie pytania mają tylko jedną poprawną odpowiedź.</p>
-        <p>Na górze ekranu będzie widoczny pozostały czas.</p>
+        <p>
+          Na górze ekranu będzie widoczny pozostały czas. Najedź na pasek abyt
+          poznać dokładną wartość.
+        </p>
       </QuizInfo>
 
       <Clock>

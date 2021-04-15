@@ -8,12 +8,20 @@ import { useState, useEffect, useContext } from "react";
 import quizContext from "../../context/QuizContext";
 
 const Question = ({ questions }) => {
+  const [timeLeft, setTimeLeft] = useState(3600);
   const [currentQuestionNumber, setCurrentQuestionNumber] = useState(0);
   const { handleMaxPoints, addPoint, addAnswer } = useContext(quizContext);
   const router = useRouter();
 
   useEffect(() => {
     handleMaxPoints(questions.length);
+  }, []);
+
+  useEffect(() => {
+    const intervalID = setInterval(() => setTimeLeft(prev => prev - 1), 1000);
+    return () => {
+      clearInterval(intervalID);
+    };
   }, []);
 
   const handleSubmitAnswer = index => {
@@ -42,7 +50,7 @@ const Question = ({ questions }) => {
     const currentQuestion = questions[currentQuestionNumber];
     const answerButtons = [];
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < Object.keys(currentQuestion.answers).length; i++) {
       let questionSign;
       switch (i) {
         case 0:
@@ -78,6 +86,7 @@ const Question = ({ questions }) => {
     const code = q.match(/<code>.*<\/code>/i);
 
     if (!code) return <div>{q}</div>;
+    const codeString = code[0].replace(/[;]/gi, "\n");
 
     const codeFormatted = (
       <SyntaxHighlighter
@@ -85,8 +94,9 @@ const Question = ({ questions }) => {
         style={docco}
         wrapLines={true}
         showLineNumbers={true}
+        customStyle={{ fontSize: "1rem" }}
       >
-        {code[0].slice(6, -7)}
+        {codeString.slice(6, -7)}
       </SyntaxHighlighter>
     );
 
@@ -98,9 +108,13 @@ const Question = ({ questions }) => {
     );
   };
 
+  const width = ((100 / 3600) * timeLeft).toFixed(2) + "%";
+  const time = `Pozostały czas: ${Math.floor(timeLeft / 60)} : ${Math.floor(
+    timeLeft % 60
+  )}`;
   return (
     <Container>
-      <TimeBar />
+      <TimeBar time={time} width={width} />
       <QuestionNumber>
         Pytanie {currentQuestionNumber + 1} z {questions.length}
       </QuestionNumber>
@@ -138,12 +152,57 @@ const QuestionNumber = styled.span`
   font-size: 1.5rem;
 `;
 
-const TimeBar = styled.div`
+const TimeBar = styled.div.attrs(({ width }) => ({
+  style: {
+    width,
+  },
+}))`
   grid-area: 1/1/2/-1;
-  width: 100%;
   height: 1rem;
 
   background: ${({ theme }) => theme.colors.main};
+
+  &:after {
+    content: "${({ time, width }) => time} ";
+    z-index: 999;
+    position: absolute;
+
+    left: 1rem;
+    top: 2rem;
+
+    width: 20vw;
+    height: 10vh;
+
+    transform: translateY(-100%);
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 10px;
+    box-shadow: 0 0 5px 0 black,
+      inset 0 0 5px 0 ${({ theme }) => theme.colors.main};
+
+    font-size: 1.5rem;
+
+    color: white;
+    background: ${({ theme }) => theme.colors.lightBlue};
+
+    padding: 1rem;
+    transition: 300ms;
+    opacity: 0;
+  }
+
+  &:hover:after {
+    transform: translate(0);
+
+    opacity: 1;
+  }
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.lightBlue};
+  }
 `;
 
 const Container = styled.div`
@@ -167,10 +226,12 @@ const QuestionContainer = styled.div`
 
   box-shadow: 0 0 0 4px white, 0 0 0 8px ${({ theme }) => theme.colors.main};
 
-  font-size: 1.5rem;
+  font-size: 1.25rem;
 
   color: white;
   background: ${({ theme }) => theme.colors.main};
+
+  padding: 1rem;
 `;
 
 const AnswersContainer = styled.div`
@@ -192,7 +253,7 @@ const Answer = styled.button`
   justify-content: center;
   align-items: center;
 
-  font-size: 1.5rem;
+  font-size: 1.25rem;
 
   color: white;
   background: ${({ theme }) => theme.colors.main};

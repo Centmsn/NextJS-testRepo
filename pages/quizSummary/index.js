@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import styled from "styled-components";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import { docco } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { dark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 
 import quizContext from "../../context/QuizContext";
 
@@ -11,7 +11,7 @@ const renderQuestion = q => {
   if (!code) return <div>{q}</div>;
 
   const codeFormatted = (
-    <SyntaxHighlighter language="javascript" style={docco} wrapLines={true}>
+    <SyntaxHighlighter language="javascript" style={dark} wrapLines={true}>
       {code[0].slice(6, -7)}
     </SyntaxHighlighter>
   );
@@ -34,8 +34,8 @@ const QuizSummary = () => {
       list.push(
         <ListElement>
           <h3>{renderQuestion(answer.question)}</h3>
-          <CorrectAnswer>poprawna: {answer.correct}</CorrectAnswer>
-          <UserAnswer>zaznaczona: {answer.answer}</UserAnswer>
+          <CorrectAnswer>poprawna odpowiedź: {answer.correct}</CorrectAnswer>
+          <UserAnswer>zaznaczona odpowiedź: {answer.answer}</UserAnswer>
         </ListElement>
       )
     );
@@ -45,7 +45,7 @@ const QuizSummary = () => {
 
   return (
     <Container>
-      <Title>Twój wynik: {(points / maxPoints) * 100}%</Title>
+      <Title>Twój wynik: {Math.floor((points / maxPoints) * 100)}%</Title>
 
       <ul>{renderListOfAnswers()}</ul>
     </Container>
@@ -66,7 +66,7 @@ const Container = styled.div`
 `;
 
 const ListElement = styled.li`
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 
   text-align: center;
 
