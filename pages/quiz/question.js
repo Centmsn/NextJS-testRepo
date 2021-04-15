@@ -139,6 +139,7 @@ export const getStaticProps = async () => {
     props: {
       questions: converted,
     },
+    revalidate: 60,
   };
 };
 
